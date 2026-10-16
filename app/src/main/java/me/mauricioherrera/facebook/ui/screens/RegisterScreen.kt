@@ -1,4 +1,4 @@
-package me.mauricioherrera.facebook
+package me.mauricioherrera.facebook.ui.screens
 
 
 import androidx.compose.foundation.layout.*

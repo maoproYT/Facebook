@@ -175,7 +175,7 @@ fun FacebookLoginScreen(navController: NavController) {
 }
 
 @Composable
-private fun FacebookTextField(
+fun FacebookTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
@@ -189,51 +189,28 @@ private fun FacebookTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
-        placeholder = {
-            Text(
-                text = placeholder,
-                color = FacebookTextGray,
-                fontSize = 16.sp
-            )
-        },
+        placeholder = { Text(placeholder, color = FacebookTextGray, fontSize = 16.sp) },
         singleLine = true,
         shape = RoundedCornerShape(6.dp),
-        visualTransformation = if (isPassword && !passwordVisible) {
-            PasswordVisualTransformation()
-        } else {
-            VisualTransformation.None
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        ),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+        visualTransformation = if (isPassword && !passwordVisible)
+            PasswordVisualTransformation() else VisualTransformation.None,
         trailingIcon = if (isPassword) {
             {
                 IconButton(onClick = onTogglePasswordVisibility) {
                     Icon(
-                        imageVector = if (passwordVisible) {
-                            Icons.Filled.VisibilityOff
-                        } else {
-                            Icons.Filled.Visibility
-                        },
-                        contentDescription = if (passwordVisible) {
-                            "Ocultar contraseña"
-                        } else {
-                            "Mostrar contraseña"
-                        },
+                        imageVector = if (passwordVisible) Icons.Filled.VisibilityOff
+                        else Icons.Filled.Visibility,
+                        contentDescription = if (passwordVisible) "Ocultar contraseña"
+                        else "Mostrar contraseña",
                         tint = FacebookTextGray
                     )
                 }
             }
-        } else {
-            null
-        },
+        } else null,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = FacebookBlue,
-            unfocusedBorderColor = FacebookBorderGray,
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            cursorColor = FacebookBlue
+            unfocusedBorderColor = FacebookBorderGray
         )
     )
 }

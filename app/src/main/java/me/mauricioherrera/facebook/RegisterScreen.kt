@@ -1,6 +1,4 @@
-
 package me.mauricioherrera.facebook
-
 
 
 import androidx.compose.foundation.layout.*
@@ -15,21 +13,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-
 private val FacebookBlue = Color(0xFF1877F2)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FacebookRegisterScreen(navController: NavController) {
+fun FacebookRegisterScreen(
+    onClickBack: () -> Unit
+) {
+
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var emailOrPhone by remember { mutableStateOf("") }
@@ -37,25 +33,31 @@ fun FacebookRegisterScreen(navController: NavController) {
     var birthDate by remember { mutableStateOf("") }
     var selectedGender by remember { mutableStateOf("Mujer") }
 
-    val genderOptions = listOf("Mujer", "Hombre", "Personalizado")
+    val genderOptions = listOf(
+        "Mujer",
+        "Hombre",
+        "Personalizado"
+    )
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(
-                        onClick = { navController.popBackStack() }
-                    ) {
+                    IconButton(onClick = onClickBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Ir atrás"
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         }
     ) { paddingValues ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -64,6 +66,7 @@ fun FacebookRegisterScreen(navController: NavController) {
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
@@ -79,6 +82,7 @@ fun FacebookRegisterScreen(navController: NavController) {
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
+            // Nombre y apellido
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -108,6 +112,7 @@ fun FacebookRegisterScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Correo o teléfono
             OutlinedTextField(
                 value = emailOrPhone,
                 onValueChange = { emailOrPhone = it },
@@ -124,6 +129,7 @@ fun FacebookRegisterScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Contraseña
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -139,7 +145,10 @@ fun FacebookRegisterScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(modifier = Modifier.fillMaxWidth()) {
+            // Fecha de nacimiento
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = "Fecha de nacimiento",
                     fontSize = 12.sp,
@@ -161,7 +170,10 @@ fun FacebookRegisterScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(modifier = Modifier.fillMaxWidth()) {
+            // Selección de género
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
                     text = "Género",
                     fontSize = 12.sp,
@@ -175,18 +187,23 @@ fun FacebookRegisterScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     genderOptions.forEach { option ->
+
                         Row(
                             modifier = Modifier
                                 .selectable(
                                     selected = option == selectedGender,
-                                    onClick = { selectedGender = option },
-                                    role = Role.RadioButton
-                                ),
+                                    onClick = {
+                                        selectedGender = option
+                                    }
+                                )
+                                .padding(end = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
                                 selected = option == selectedGender,
-                                onClick = { selectedGender = option }
+                                onClick = {
+                                    selectedGender = option
+                                }
                             )
 
                             Text(
@@ -200,10 +217,12 @@ fun FacebookRegisterScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Botón de registro
             Button(
                 onClick = {
-                    // Aquí implementarás el registro.
+                    // Aquí puedes implementar el registro.
                 },
+
                 colors = ButtonDefaults.buttonColors(
                     containerColor = FacebookBlue
                 ),
@@ -221,15 +240,9 @@ fun FacebookRegisterScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Volver a iniciar sesión
             TextButton(
-                onClick = {
-                    navController.navigate("login") {
-                        popUpTo("login") {
-                            inclusive = false
-                        }
-                        launchSingleTop = true
-                    }
-                }
+                onClick = onClickBack
             ) {
                 Text(
                     text = "¿Ya tienes una cuenta?",

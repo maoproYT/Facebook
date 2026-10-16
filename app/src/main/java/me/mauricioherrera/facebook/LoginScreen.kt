@@ -1,9 +1,9 @@
 package me.mauricioherrera.facebook
 
-import androidx.compose.foundation.Image
+
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -14,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,18 +23,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
-// Colores oficiales de Facebook
-val FacebookBlue = Color(0xFF1877F2)
-private val FacebookLightBlue = Color(0xFF42B72A) // verde para "Crear cuenta"
-private val FacebookGray = Color(0xFFF0F2F5)
+// Colores de la interfaz
+private val FacebookBlue = Color(0xFF1877F2)
+private val FacebookGreen = Color(0xFF42B72A)
 private val FacebookBorderGray = Color(0xFFCCD0D5)
 private val FacebookTextGray = Color(0xFF606770)
-private val FacebookDarkText = Color(0xFF1C1E21)
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun FacebookLoginScreen() {
+fun FacebookLoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -48,9 +45,8 @@ fun FacebookLoginScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.height(80.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
-        // Logo de Facebook (texto estilizado)
         Text(
             text = "facebook",
             color = FacebookBlue,
@@ -61,7 +57,6 @@ fun FacebookLoginScreen() {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Campo de Email/Teléfono
         FacebookTextField(
             value = email,
             onValueChange = { email = it },
@@ -72,7 +67,6 @@ fun FacebookLoginScreen() {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Campo de Contraseña
         FacebookTextField(
             value = password,
             onValueChange = { password = it },
@@ -81,20 +75,24 @@ fun FacebookLoginScreen() {
             imeAction = ImeAction.Done,
             isPassword = true,
             passwordVisible = passwordVisible,
-            onTogglePasswordVisibility = { passwordVisible = !passwordVisible }
+            onTogglePasswordVisibility = {
+                passwordVisible = !passwordVisible
+            }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón Iniciar sesión
         Button(
-            onClick = {  },
+            onClick = {
+                // Aquí puedes implementar el inicio de sesión.
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = FacebookBlue),
-            shape = RoundedCornerShape(6.dp),
-            //enabled = email.isNotBlank() && password.isNotBlank()
+            colors = ButtonDefaults.buttonColors(
+                containerColor = FacebookBlue
+            ),
+            shape = RoundedCornerShape(6.dp)
         ) {
             Text(
                 text = "Iniciar sesión",
@@ -104,10 +102,11 @@ fun FacebookLoginScreen() {
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Link "¿Olvidaste tu contraseña?"
-        TextButton(onClick = {}) {
+        TextButton(onClick = {
+            // Aquí puedes implementar la recuperación de contraseña.
+        }) {
             Text(
                 text = "¿Olvidaste tu contraseña?",
                 color = FacebookTextGray,
@@ -115,9 +114,8 @@ fun FacebookLoginScreen() {
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Divisor "O"
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -127,12 +125,14 @@ fun FacebookLoginScreen() {
                 color = FacebookBorderGray,
                 thickness = 1.dp
             )
+
             Text(
                 text = "o",
                 modifier = Modifier.padding(horizontal = 12.dp),
                 color = FacebookTextGray,
                 fontSize = 14.sp
             )
+
             HorizontalDivider(
                 modifier = Modifier.weight(1f),
                 color = FacebookBorderGray,
@@ -142,13 +142,16 @@ fun FacebookLoginScreen() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Botón Crear cuenta nueva
         Button(
-            onClick = {},
+            onClick = {
+                navController.navigate("register")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = FacebookLightBlue),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = FacebookGreen
+            ),
             shape = RoundedCornerShape(6.dp)
         ) {
             Text(
@@ -161,7 +164,6 @@ fun FacebookLoginScreen() {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Footer con marca registrada
         Text(
             text = "Meta © 2024",
             modifier = Modifier.padding(bottom = 24.dp),
@@ -196,8 +198,11 @@ private fun FacebookTextField(
         },
         singleLine = true,
         shape = RoundedCornerShape(6.dp),
-        visualTransformation = if (isPassword && !passwordVisible)
-            PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation = if (isPassword && !passwordVisible) {
+            PasswordVisualTransformation()
+        } else {
+            VisualTransformation.None
+        },
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction = imeAction
@@ -206,15 +211,23 @@ private fun FacebookTextField(
             {
                 IconButton(onClick = onTogglePasswordVisibility) {
                     Icon(
-                        imageVector = if (passwordVisible)
-                            Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                        contentDescription = if (passwordVisible)
-                            "Ocultar contraseña" else "Mostrar contraseña",
+                        imageVector = if (passwordVisible) {
+                            Icons.Filled.VisibilityOff
+                        } else {
+                            Icons.Filled.Visibility
+                        },
+                        contentDescription = if (passwordVisible) {
+                            "Ocultar contraseña"
+                        } else {
+                            "Mostrar contraseña"
+                        },
                         tint = FacebookTextGray
                     )
                 }
             }
-        } else null,
+        } else {
+            null
+        },
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = FacebookBlue,
             unfocusedBorderColor = FacebookBorderGray,

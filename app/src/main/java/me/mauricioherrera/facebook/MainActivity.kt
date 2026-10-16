@@ -11,15 +11,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import me.mauricioherrera.facebook.ui.theme.FaceBookTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-
+            val myNavController = rememberNavController()
+            NavHost(
+                navController = myNavController,
+                startDestination = "login",
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                composable(route = "login") {
+                    FacebookLoginScreen(myNavController)
+                }
+                composable(route = "register") {
+                    FacebookRegisterScreen()
+                }
             }
+
         }
     }
-
